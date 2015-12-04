@@ -1,0 +1,35 @@
+<head>
+  <title>demo</title>
+</head>
+
+<body>
+	<div>
+		<h2> binded to collection </h2>
+	  {{> snippet_editors}}
+  </div>
+  <div style="clear:both">
+	  <h2> binded to session vars </h2>
+	  {{> sessionvar_editors}}
+  </div>
+</body>
+
+<template name="snippet_editors">
+	<div>
+		<button id="actionAddSnippet">New Snippet</button>
+	</div>
+  {{#each editors}}
+  	<div style="margin:1em; width:300px; float:left">
+			<span>Snippet #{{this._id}}</span>
+			{{> CodeMirror id=editorID name=editorID options=editorOptions code=editorCode events=editorEvents}}
+		</div>
+  {{/each}}
+</template>
+
+<template name="sessionvar_editors">
+  {{#each editors}}
+  	<div style="margin:1em; width:300px; float:left">
+			<span>Session "{{this}}"</span>
+			{{> CodeMirror id=editorID name=editorID options=editorOptions code=editorCode events=editorEvents}}
+		</div>
+  {{/each}}
+</template>

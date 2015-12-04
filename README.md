@@ -1,37 +1,43 @@
 Meteor CodeMirror package
 =========================
 
-<a href="http://codemirror.net/" target="_blank">CodeMirror</a> packaged for Meteor. **CodeMirror** is a versatile text editor implemented in JavaScript for the browser.
+<a href="http://codemirror.net/" target="_blank">CodeMirror</a> 4.7.1 packaged for Meteor. **CodeMirror** is a versatile text editor implemented in JavaScript for the browser.
 
+About this fork
+---------------
+* Add optionnal template parameter `events` to provide listeners for CodeMirror's own events
+* Add a quick and dirty demo to showcase two simple uses of the `"change"` event.
+* Removed template parameter `reactiveVar` because `events` can do it with more control (cf. demo).
+* Add a timeout of few milliseconds to prevent editor's content to refresh while you are editing it.
 
 Usage
 -----
 
 Put somewhere in your template:
 
-```
+```html
 <template name="EditorPage">
 
-	{{> CodeMirror id="some-id" name="someName" options=editorOptions code=editorCode reactiveVar="varName"}}
+	{{> CodeMirror id="some-id" name="someName" options=editorOptions code=editorCode events=editorEvents}}
 
 </template>
 ```
 
 Parameters:
 
-- `id` will be set to internal textarea element
+- `id` will be set to internal textarea element (reactive)
 
-- `name` will be set to internal textarea element (useful in form submit)
+- `name` will be set to internal textarea element (useful in form submit) (reactive)
 
-- `options` is CodeMirror options object
+- `options` is CodeMirror options object (not reactive)
 
-- `code` is code to show in editor
+- `code` is code to show in editor (reactive)
 
-- `reactiveVar` optional name of Session variable, which is a reactive source of code
+- `events` is an optional object providing listeners for CodeMirror's events (not reactive)
 
 And provide helpers that returns CodeMirror options and content:
 
-```
+```js
 Template.EditorPage.helpers({
 
 	"editorOptions": function() {
@@ -44,16 +50,15 @@ Template.EditorPage.helpers({
 	"editorCode": function() {
 		return "Code to show in editor";
 	}
-
 });
 ```
 
 To get value from editor, just read value from the internal textarea:
 
-```
+```js
 Template.EditorPage.events({
 
-	"some event": function(e, t) {
+	"click button#save": function(e, t) {
 		var code = t.find("#some-id").value;
 		alert(code);
 	}
@@ -62,14 +67,21 @@ Template.EditorPage.events({
 
 ```
 
-Or, if you provided `reactiveVar` you can read session variable:
+Or, if you provided a `change` listener in your `events` object, you can store it in a session variable, update your collections or whatever suits you :
 
-```
+```js
 Template.EditorPage.helpers({
-	"getEditorText": function() {
-		return Session.get("varName"); // "varName" is variable name you provided to reactiveVar 
+
+	"editorEvents": function(){
+		return {
+			// see https://codemirror.net/doc/manual.html#events
+			"change": function(doc, change){
+				console.log(d.getValue());
+			}
+		};
 	}
 });
+
 
 ```
 
@@ -79,7 +91,7 @@ Or, using raw html/javascript
 
 Create textarea somewhere in your html template:
 
-```
+```html
 <template name="EditorPage">
 
 	<textarea id="myTextarea"></textarea>
@@ -89,7 +101,7 @@ Create textarea somewhere in your html template:
 
 Initialize CodeMirror somewhere from your js:
 
-```
+```js
 Template.EditorPage.rendered = function() {
 	var editor = CodeMirror.fromTextArea(this.find("#myTextarea"), {
 		lineNumbers: true,
