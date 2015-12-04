@@ -5,7 +5,7 @@ Meteor CodeMirror package
 
 About this fork
 ---------------
-* Add optionnal template parameter `events` to provide listeners for CodeMirror's own events
+* Add optional template parameter `events` to provide listeners for CodeMirror's own events
 * Add a quick and dirty demo to showcase two simple uses of the `"change"` event.
 * Removed template parameter `reactiveVar` because `events` can do it with more control (cf. demo).
 * Add a timeout of few milliseconds to prevent editor's content to refresh while you are editing it.
