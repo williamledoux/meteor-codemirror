@@ -1,5 +1,5 @@
 Package.describe({
-	summary: "CodeMirror editor for Meteor >= 1.0",
+	summary: "CodeMirror editor for Meteor >= 1.0 (with events)",
 	version: "1.2.5",
 	name: "williamledoux:codemirror",
 	git: "https://github.com/williamledoux/meteor-codemirror.git"
